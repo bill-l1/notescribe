@@ -43,12 +43,12 @@ def uploadNewBlock(blockArray):
     db.child("Classes").child(Classcode).child("Transcripts").child(blockID).set(blockarray[-1])
 
 def addNote(classCode, blockNumber, message):
-        db.child("Classes").child(classCode).child("Transcripts").child(blockNumber).set(message)
+    db.child("Classes").child(classCode).child("Transcripts").child(blockNumber).push(message)
 def viewAllNotes(classCode, blockNumber):
     return(db.child("Classes").child(classCode).child("Transcripts").child(blockNumber).shallow().get())
 def viewAllBlocks(classCode):
     return(db.child("Classes").child(classCode).child("Transcripts").shallow().get())
-def viewStream(classCode):
+    
     
     
     
