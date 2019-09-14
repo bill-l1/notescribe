@@ -12,22 +12,23 @@ config = {
   }
 
 
-headers = {
-    'Content-Type': 'application/json',
-}
 
 
-data = '{"returnSecureToken":true}'
+
+
 
 
 firebase = pyrebase.initialize_app(config)
 
 db = firebase.database()
-data = {"Transcripts": {1: "Beginning of lecture"} }
-db.child("Classes").child("MATH137").set(data)
+
 
 def signIn(classID):
     if(classID == "password"):
+        headers = {
+        'Content-Type': 'application/json',
+        }
+        data = '{"returnSecureToken":true}'
         response = requests.post('https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyAn2bI9-r1lQrRdao7QQ6GUXu2ZK-f9Hvc', data=data)
         return True
     return False
@@ -59,3 +60,13 @@ def upload_file(filename, classCode):
         print(message["error"]["message"])
     else:
         print(loader.read())
+
+def downloadFile(filename, classCode):
+    my_url = "https://firebasestorage.googleapis.com/v0/b/htn-aydan.appspot.com/o/"+classCode+"%2F"+filename+"?alt=media"
+    try:
+        loader = urllib.request.urlretrieve(my_url, "newdata.data")
+    except urllib.error.URLError as e:
+        message = json.loads(e.read())
+        print(message["error"]["message"])
+    else:
+        print(loader)
