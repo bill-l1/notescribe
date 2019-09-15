@@ -4,16 +4,13 @@ import requests
 import urllib
 
 
+
 config = {
   "apiKey": "AIzaSyAn2bI9-r1lQrRdao7QQ6GUXu2ZK-f9Hvc",
   "authDomain": "htn-aydan.firebaseapp.com",
   "databaseURL": "https://htn-aydan.firebaseio.com",
   "storageBucket": "htn-aydan.appspot.com"
   }
-
-
-
-
 
 
 
@@ -45,13 +42,14 @@ def viewAllBlocks(classCode):
     return(db.child("Classes").child(classCode).child("Transcripts").shallow().get())
     
 def upload_file(filename, classCode):
-
-    my_file = open(filename, "rb")
-    my_bytes = my_file.read()
-    my_url = "https://firebasestorage.googleapis.com/v0/b/htn-aydan.appspot.com/o/" + classCode +"%2F"+filename
+    with open(filename, 'rb') as fd:
+        my_file = fd.read()
+    my_url = "https://firebasestorage.googleapis.com/v0/b/htn-aydan.appspot.com/o/"+classCode+"%2F"+filename[5:]
     my_headers = {"Content-Type": "audio/wav"}
-
-    my_request = urllib.request.Request(my_url, data=my_bytes, headers=my_headers, method="POST")
+    print(my_url)
+    r=requests.post(my_url, data = my_file,headers=my_headers)
+"""
+    my_request = urllib.request.Request(my_url, data=my_file, headers=my_headers, method="POST")
 
     try:
         loader = urllib.request.urlopen(my_request)
@@ -60,13 +58,19 @@ def upload_file(filename, classCode):
         print(message["error"]["message"])
     else:
         print(loader.read())
+"""
 
 def downloadFile(filename, classCode):
     my_url = "https://firebasestorage.googleapis.com/v0/b/htn-aydan.appspot.com/o/"+classCode+"%2F"+filename+"?alt=media"
     try:
-        loader = urllib.request.urlretrieve(my_url, "newdata.data")
+        loader = urllib.request.urlretrieve(my_url, "data/temp/"+filename)
     except urllib.error.URLError as e:
         message = json.loads(e.read())
         print(message["error"]["message"])
     else:
         print(loader)
+
+#upload_file("data/whatstheweatherlike.wav", "CS135")
+#downloadFile("bomb_x.wav", "CS135")
+
+
