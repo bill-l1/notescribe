@@ -19,14 +19,15 @@ firebase.initializeApp(firebaseConfig);
 let uploadFile = function(){
   let element = document.getElementById('fileupload');
   let formData = new FormData();
-  let key = "nut";
+  let key = new Date().getTime().toString();
+  let classroom = "CS135"
   let storageRef = firebase.storage().ref();
-  let wavRef = storageRef.child(key + ".wav")
+  let wavRef = storageRef.child(classroom + "/" + key + ".wav")
 
   console.log(element.files[0]);
   wavRef.put(element.files[0]).then(snapshot => {
     console.log('Uploaded.');
-    socket.emit('createBlockData', {'key': key});
+    socket.emit('createBlockData', {'key': key, 'classroom': classroom});
   });
   $("#submit").submit();
 

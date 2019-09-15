@@ -1,8 +1,9 @@
-import json, pyrebase, requests, urllib
+import json, pyrebase, requests, urllib, os
 from flask import Flask, render_template
-from celery import Celery, chain
+from celery import chain, signature
+from celery_config import celery_app
 from flask_socketio import SocketIO
-from blockGen import CreateBlockDataFromWav
+from blockGen import CreateBlockDataFromWav, createBlockData
 
 
 config = {
@@ -18,7 +19,6 @@ firebase = pyrebase.initialize_app(config)
 storage = firebase.storage()
 
 db = firebase.database()
-
 
 def signIn(classID):
     if(classID == "password"):
@@ -48,7 +48,6 @@ def upload_file(filename, classCode):
     my_headers = {"Content-Type": "audio/wav"}
     print(my_url)
     r=requests.post(my_url, data = my_file,headers=my_headers)
-"""
     my_request = urllib.request.Request(my_url, data=my_file, headers=my_headers, method="POST")
 
     try:
@@ -59,25 +58,27 @@ def upload_file(filename, classCode):
     else:
         print(loader.read())
 
+
 flask_app = Flask(__name__)
 
 flask_app.config.update(
     CELERY_BROKER_URL='redis://localhost:6379',
     CELERY_RESULT_BACKEND='redis://localhost:6379'
 )
-celery_app = Celery(
-    flask_app.import_name,
-    broker=flask_app.config['CELERY_BROKER_URL'],
-    backend=flask_app.config['CELERY_RESULT_BACKEND']
-)
-celery_app.conf.update(flask_app.config)
-
-class ContextTask(celery_app.Task):
-    def __call__(self, *args, **kwargs):
-        with flask_app.app_context():
-            return self.run(*args, **kwargs)
-
-celery_app.Task = ContextTask
+#
+# celery_app = Celery(
+#     flask_app.import_name,
+#     broker=flask_app.config['CELERY_BROKER_URL'],
+#     backend=flask_app.config['CELERY_RESULT_BACKEND']
+# )
+# celery_app.conf.update(flask_app.config)
+#
+# class ContextTask(celery_app.Task):
+#     def __call__(self, *args, **kwargs):
+#         with flask_app.app_context():
+#             return self.run(*args, **kwargs)
+#
+# celery_app.Task = ContextTask
 
 socketio = SocketIO(flask_app)
 
@@ -86,21 +87,43 @@ def index():
     return render_template('index.html')
     # return '<html><body><h1>Hello World</h1></body></html>'
 
+@celery_app.task()
+def handleDownload(key, classroom, path):#TODO append to appropriate class later
+    return storage.child(classroom+"/"+key+".wav").download(path)
+
+@celery_app.task()
+def handleUpload(key, classroom, data, path):
+    print("uploading shit:")
+    newData = data.copy();
+    newData['key'] = key
+    newData['classroom'] = classroom
+    with open(path, 'w') as outfile:
+        json.dump(newData, outfile)
+    return storage.child(classroom+"/"+key+".json").put(path)
+
+@celery_app.task()
+def handleDeleteFile(path):
+    print("deleting", path)
+    os.remove(path)
+
 @socketio.on('createBlockData')
 def handleCreateBlockData(data):
-    # print(data)
-    # key = data['key']
-    # print("received key: " + key)
-    # print("finna look for wav:")
-    # path = "data/temp/"+key+".wav"
-    # result = chain(
-    #     storage.child(key+".wav").download.apply_async(path),
-    #     print(path + " downloaded"),
-    #     CreateBlockDataFromWav(path)
-    # ).delay()
-    # res = result.wait();
-    # print(res)
+    print(data)
+    key = data['key']
+    classroom = data['classroom']
+    print("received key" , key, "for classroom", classroom)
+    print("finna look for wav:")
+    path1 = "data/temp/"+key+".wav"
+    path2 = "data/temp/"+key+".json"
+    #from blockGen import CreateBlockDataFromWav
+    result = chain(handleDownload.s(key, classroom, path1), createBlockData.si(path1))()
+    res = result.wait();
+    chain(handleUpload.s(key, classroom, res, path2), handleDeleteFile.si(path1), handleDeleteFile.si(path2))()
+    print('super donezo')
 
+@socketio.on('generateKey')
+def handleKeyGen():
+    socketio.emit('message', db.generate_key())
 
 if(__name__ == '__main__'):
     socketio.run(flask_app)
