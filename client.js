@@ -1,4 +1,6 @@
 var wavesurfer = WaveSurfer.create({
     container: '#waveform',
-    scrollParent: true
+    scrollParent: false
 });
+
+wavesurfer.load('Psycho.mp3');
