@@ -31,5 +31,4 @@ let uploadFile = function(){
   });
   $("#submit").submit();
 
-
 }

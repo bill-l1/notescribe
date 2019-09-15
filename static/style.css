@@ -61,8 +61,25 @@ body {
 
 #transcription-box {
 	text-align: center;
+	height: auto;
+	width: auto;
+	margin:0;
+	overflow-y: auto;
 }
 
 #uploadbanner {
 	margin: 4%;
+}
+
+.word-block{
+	height:auto;
+}
+
+.edit-container {
+	height:100%;
+}
+
+.edit-button-confirm{
+	height:100%;
+	float:left;
 }

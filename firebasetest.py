@@ -1,5 +1,5 @@
 import json, pyrebase, requests, urllib, os
-from flask import Flask, render_template
+from flask import Flask, render_template, request
 from celery import chain, signature
 from celery_config import celery_app
 from flask_socketio import SocketIO
@@ -83,9 +83,19 @@ flask_app.config.update(
 socketio = SocketIO(flask_app)
 
 @flask_app.route('/')
-def index():
+def page_index():
     return render_template('index.html')
     # return '<html><body><h1>Hello World</h1></body></html>'
+
+@flask_app.route('/classroom')
+def page_classroom():
+    headers = request.headers
+    return render_template('classroom.html')
+
+@flask_app.route('/lecture')
+def page_lecture():
+    headers = request.headers
+    return render_template('lecture.html')
 
 @celery_app.task()
 def handleDownload(key, classroom, path):#TODO append to appropriate class later
