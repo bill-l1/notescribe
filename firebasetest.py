@@ -1,8 +1,8 @@
-import json
-import pyrebase
-import requests
-import urllib
-
+import json, pyrebase, requests, urllib
+from flask import Flask, render_template
+from celery import Celery, chain
+from flask_socketio import SocketIO
+from blockGen import CreateBlockDataFromWav
 
 config = {
   "apiKey": "AIzaSyAn2bI9-r1lQrRdao7QQ6GUXu2ZK-f9Hvc",
@@ -11,16 +11,14 @@ config = {
   "storageBucket": "htn-aydan.appspot.com"
   }
 
-
 headers = {
     'Content-Type': 'application/json',
 }
 
-
 data = '{"returnSecureToken":true}'
 
-
 firebase = pyrebase.initialize_app(config)
+storage = firebase.storage()
 
 db = firebase.database()
 data = {"Transcripts": {1: "Beginning of lecture"} }
@@ -42,9 +40,8 @@ def viewAllNotes(classCode, blockNumber):
     return(db.child("Classes").child(classCode).child("Transcripts").child(blockNumber).shallow().get())
 def viewAllBlocks(classCode):
     return(db.child("Classes").child(classCode).child("Transcripts").shallow().get())
-    
-def upload_file(filename, classCode):
 
+def upload_file(filename, classCode):
     my_file = open(filename, "rb")
     my_bytes = my_file.read()
     my_url = "https://firebasestorage.googleapis.com/v0/b/htn-aydan.appspot.com/o/" + classCode +"%2F"+filename
@@ -59,3 +56,49 @@ def upload_file(filename, classCode):
         print(message["error"]["message"])
     else:
         print(loader.read())
+
+flask_app = Flask(__name__)
+
+flask_app.config.update(
+    CELERY_BROKER_URL='redis://localhost:6379',
+    CELERY_RESULT_BACKEND='redis://localhost:6379'
+)
+celery_app = Celery(
+    flask_app.import_name,
+    broker=flask_app.config['CELERY_BROKER_URL'],
+    backend=flask_app.config['CELERY_RESULT_BACKEND']
+)
+celery_app.conf.update(flask_app.config)
+
+class ContextTask(celery_app.Task):
+    def __call__(self, *args, **kwargs):
+        with flask_app.app_context():
+            return self.run(*args, **kwargs)
+
+celery_app.Task = ContextTask
+
+socketio = SocketIO(flask_app)
+
+@flask_app.route('/')
+def index():
+    return render_template('index.html')
+    # return '<html><body><h1>Hello World</h1></body></html>'
+
+@socketio.on('createBlockData')
+def handleCreateBlockData(data):
+    # print(data)
+    # key = data['key']
+    # print("received key: " + key)
+    # print("finna look for wav:")
+    # path = "data/temp/"+key+".wav"
+    # result = chain(
+    #     storage.child(key+".wav").download.apply_async(path),
+    #     print(path + " downloaded"),
+    #     CreateBlockDataFromWav(path)
+    # ).delay()
+    # res = result.wait();
+    # print(res)
+
+
+if(__name__ == '__main__'):
+    socketio.run(flask_app)
