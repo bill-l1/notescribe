@@ -10,14 +10,36 @@ body {
 	  max-width: 300px;
 	}
 
+	*{
+	  box-sizing: border-box;
+	}
+
+	.zoom {
+	  padding: 50px;
+		border: 1px solid black;
+	  background-image: url(https://cdn.shopify.com/s/files/1/0962/3744/products/WHX-paper-_0025_LineKing.pdf_2048x2048.jpg?v=1445604870);
+	  transition: transform .2s;
+	  width: 350px;
+	  height: 200px;
+	  margin: 0 auto;
+	}
+
+	.zoom:hover {
+	  -ms-transform: scale(1.1); /* IE 9 */
+	  -webkit-transform: scale(1.1); /* Safari 3-8 */
+	  transform: scale(1.1);
+	}
+
 	.container-fluid{
 		position: absolute;
 		margin-left: 255px;
+		margin-top: 5px;
 	}
 
 	.col-lg-3 {
-		border: 1px solid black;
-		margin: 10px;
+		padding-top: 10px;
+		margin: 20px;
+		margin-bottom: 35px;
 	}
 
 	/* Full-width input fields */
@@ -51,11 +73,12 @@ body {
 	  opacity: 0.9;
 	}
 
-	.active {
+	.btnn:hover {
+	  opacity: 1;
 	}
 
-	.btn:hover {
-	  opacity: 1;
+	.btn{
+		font-size: 35px;
 	}
 
 	.form-group {
@@ -87,10 +110,10 @@ body {
 	}
 
   .main {
-	margin-left: 250px; /* Same as the width of the sidenav */
+	margin-left: 300px; /* Same as the width of the sidenav */
 	font-family: 'Work Sans', sans-serif;
-    font-weight: 300;
-	font-size: 50px; /* Increased text to enable scrolling */
+  font-weight: 300;
+	font-size: 100px; /* Increased text to enable scrolling */
 	padding: 0px 10px;
 	padding-top: 25px;
 	padding-bottom: 10px;
