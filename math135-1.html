@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" 
+	integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+	<link rel="stylesheet" href="style.css">
+	<title>Document</title>
+</head>
+<body>
+	<div class = "sidenav">
+		<img src="logosml.png" alt="Logo" height = 10% width = 95%>
+		<hr>
+		<h2>Lectures</h2>
+		<a href="math135-1.html"><button type = "button" class = "btn btn-link">Lecture 1</button></a>
+		<a href = "math135-2.html"><button type = "button" class = "btn btn-link">Lecture 2</button></a>
+	</div>
+	<div class = "main">
+		<p>Lecture 1</p>
+	</div>
+	<hr>
+
+	<div class = "main">
+		<div id = "waveform"></div>
+		<input type="button" id = "btn-play" value = "Play" disabled = "disabled"/>
+		<input type = "button" id = "btn-pause" value = "Pause" disabled = "disabled"/>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/wavesurfer.js/1.3.7/wavesurfer.min.js"></script>
+		<script>
+			var scrollToSeek = true;
+
+			window.addEventListener("keydown", (e) => {
+				if(e.keyCode == 16) {
+					console.log("Toggled");
+					scrollToSeek = !scrollToSeek;
+				}
+			});
+
+			var buttons = {
+				play: document.getElementById("btn-play"),
+				pause: document.getElementById("btn-pause"),
+			};
+			var Spectrum = WaveSurfer.create({
+				container: "#waveform",
+				progressColor: "03a9f4",
+				barHeight: 0.75,
+				barWidth: 1,
+				height: 50,
+				scrollParent: false,
+				skipLength: 0.5,
+			});
+
+			buttons.play.addEventListener("click", function(){
+				Spectrum.play();
+				buttons.play.disabled = true;
+				buttons.pause.disabled = false;
+			}, false);
+			
+			buttons.pause.addEventListener("click", function() {
+				Spectrum.pause();
+				buttons.play.disabled = false;
+				buttons.pause.disabled = true;
+			}, false);
+
+			Spectrum.on("ready", function(){
+				buttons.play.disabled = false;
+			});
+
+			window.addEventListener('wheel', function(event) {
+				if (event.deltaY < 0 && scrollToSeek) {
+					Spectrum.skipBackward();
+				}
+				else if (event.deltaY > 0 && scrollToSeek) {
+					Spectrum.skipForward();
+				}
+			});
+
+			Spectrum.load("http://127.0.0.1:8080/Psycho.mp3");
+
+				
+		</script>
+	</div>
+	<div class = "main">
+		<iframe src = "math135-1-text.html" style = "width: 100%; height: 280px; overflow:hidden" frameBorder="0"></iframe>
+	</div>
+	
+
+	
+</body>
+</html>
