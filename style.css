@@ -1,0 +1,99 @@
+body {
+	font-family: "Lato", sans-serif;
+	color: Black
+  }
+	/* Add styles to the form container */
+	.container {
+	  position: absolute;
+		right: 600px;
+	  margin: 20px;
+	  max-width: 300px;
+	}
+
+	.container-fluid{
+		position: absolute;
+		margin-left: 255px;
+	}
+
+	.col-lg-3 {
+		border: 1px solid black;
+		margin: 10px;
+	}
+
+	/* Full-width input fields */
+	  input[type=text], input[type=password] {
+	  width: 100%;
+	  padding: 15px;
+	  margin: 5px 0 22px 0;
+	  border: none;
+	  background: #f1f1f1;
+	}
+
+	input[type=text]:focus, input[type=password]:focus {
+	  background-color: #ddd;
+	  outline: none;
+	}
+
+	.center {
+	  display: block;
+	  margin-left: auto;
+	  margin-right: auto;
+	  width: 50%;
+	}
+	/* Set a style for the submit button */
+	.bttn {
+	  background-color: #3179cb;
+	  color: white;
+	  padding: 16px 20px;
+	  border: none;
+	  cursor: pointer;
+	  width: 100%;
+	  opacity: 0.9;
+	}
+
+	.active {
+	}
+
+	.btn:hover {
+	  opacity: 1;
+	}
+
+	.form-group {
+		z-index:1;
+		font-size: 1.2em
+		margin-top: -100px;
+	}
+
+  .sidenav {
+	height: 100%;
+	width: 250px;
+	position: fixed;
+	z-index: 1;
+	top: 0;
+	left: 0;
+	background-color: #111;
+	color: White;
+	overflow-x: hidden;
+	padding-top: 2px;
+	padding-left: 15px;
+	line-height: 2.0;
+	font-size: 20px;
+  }
+
+	.wrapper {
+	    display: flex;
+	    width: 100%;
+	    align-items: stretch;
+	}
+
+  .main {
+	margin-left: 250px; /* Same as the width of the sidenav */
+	font-family: 'Work Sans', sans-serif;
+    font-weight: 300;
+	font-size: 50px; /* Increased text to enable scrolling */
+	padding: 0px 10px;
+	padding-top: 25px;
+	padding-bottom: 10px;
+	padding-left: 430px;
+	background-color: #FFFF;
+  }
