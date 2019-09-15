@@ -2,45 +2,80 @@ body {
 	font-family: "Lato", sans-serif;
 	color: Black
   }
-	/* Add styles to the form container */
-	.container {
-	  position: absolute;
-		right: 600px;
-	  margin: 20px;
-	  max-width: 300px;
-	}
+.sidenav {
+	height: 100%;
+	width: 250px;
+	position: fixed;
+	z-index: 1;
+	top: 0;
+	left: 0;
+	background-color: #111;
+	color: White;
+	overflow-x: hidden;
+	padding-top: 2px;
+	padding-left: 15px;
+	line-height: 2.0;
+	font-size: 20px;
+}
 
-	*{
-	  box-sizing: border-box;
-	}
+.wrapper {
+    display: flex;
+    width: 100%;
+    align-items: stretch;
+}
 
-	.zoom {
-	  padding: 50px;
-		border: 1px solid black;
-	  background-image: url(https://cdn.shopify.com/s/files/1/0962/3744/products/WHX-paper-_0025_LineKing.pdf_2048x2048.jpg?v=1445604870);
-	  transition: transform .2s;
-	  width: 350px;
-	  height: 200px;
-	  margin: 0 auto;
-	}
+.main {
+	font-family: 'Work Sans', sans-serif;
+	font-weight: 300;
+	font-size: 100px; /* Increased text to enable scrolling */
+	padding: 0px 10px;
+	padding-top: 25px;
+	padding-bottom: 10px;
+	padding-left: 300px;
+	background-color: #FFFF;
+}
 
-	.zoom:hover {
-	  -ms-transform: scale(1.1); /* IE 9 */
-	  -webkit-transform: scale(1.1); /* Safari 3-8 */
-	  transform: scale(1.1);
-	}
+.zoom {
+  padding: 50px;
+	border: 1px solid black;
+  background-image: url(https://cdn.shopify.com/s/files/1/0962/3744/products/WHX-paper-_0025_LineKing.pdf_2048x2048.jpg?v=1445604870);
+  transition: transform .2s;
+  width: 350px;
+  height: 200px;
+  margin: 0 auto;
+}
 
-	.container-fluid{
-		position: absolute;
-		margin-left: 255px;
-		margin-top: 5px;
-	}
+.zoom:hover {
+  -ms-transform: scale(1.1); /* IE 9 */
+  -webkit-transform: scale(1.1); /* Safari 3-8 */
+  transform: scale(1.1);
+}
 
-	.col-lg-3 {
-		padding-top: 10px;
-		margin: 20px;
-		margin-bottom: 35px;
-	}
+.container{
+	position: absolute;
+	margin-left: 255px;
+	margin-top: 5px;
+	margin-right: 0px;
+}
+
+.col-lg-3 {
+	padding-top: 10px;
+	padding-right: 0px;
+	margin: 50px;
+	margin-bottom: 10px;
+}
+
+.btn{
+	font-size: 35px;
+}
+
+/* Add styles to the form container */
+.container-fluid{
+	position: absolute;
+	right: 600px;
+	margin: 20px;
+	max-width: 300px;
+}
 
 	/* Full-width input fields */
 	  input[type=text], input[type=password] {
@@ -77,46 +112,8 @@ body {
 	  opacity: 1;
 	}
 
-	.btn{
-		font-size: 35px;
-	}
-
 	.form-group {
 		z-index:1;
 		font-size: 1.2em
 		margin-top: -100px;
 	}
-
-  .sidenav {
-	height: 100%;
-	width: 250px;
-	position: fixed;
-	z-index: 1;
-	top: 0;
-	left: 0;
-	background-color: #111;
-	color: White;
-	overflow-x: hidden;
-	padding-top: 2px;
-	padding-left: 15px;
-	line-height: 2.0;
-	font-size: 20px;
-  }
-
-	.wrapper {
-	    display: flex;
-	    width: 100%;
-	    align-items: stretch;
-	}
-
-  .main {
-	margin-left: 300px; /* Same as the width of the sidenav */
-	font-family: 'Work Sans', sans-serif;
-  font-weight: 300;
-	font-size: 100px; /* Increased text to enable scrolling */
-	padding: 0px 10px;
-	padding-top: 25px;
-	padding-bottom: 10px;
-	padding-left: 430px;
-	background-color: #FFFF;
-  }

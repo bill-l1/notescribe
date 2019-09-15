@@ -10,6 +10,13 @@
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 	<link rel="stylesheet" href="style.css">
+	<script src="//cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.js" integrity="sha256-yr4fRk/GU1ehYJPAs8P4JlTgu0Hdsp4ZKrx8bDEDC3I=" crossorigin="anonymous"></script>
+<script type="text/javascript" charset="utf-8">
+    var socket = io();
+    socket.on('connect', function() {
+        socket.emit('lecture1', {data: 'I\'m connected!'});
+    });
+</script>
 	<title>Document</title>
 </head>
 <body>
@@ -17,7 +24,8 @@
 		<h1>Note Selection</h1>
 	</div>
 	<hr>
-	<div class="container-fluid">
+
+	<div class="container">
   <div class="row">
     <div class="col-lg-3">
 			<div onclick="location.href='lecture2.html';" style="cursor: pointer;">
