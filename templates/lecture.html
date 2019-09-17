@@ -11,11 +11,11 @@
 </head>
 <body>
 	<div class = "sidenav">
-		<a href="index.html"><img src="{{ url_for('static', filename="images/logosml.png")}}" alt="Logo" height = 10% width = 95%></a>
+		<a href="/"><img src="{{ url_for('static', filename="images/logosml.png")}}" alt="Logo" height = 10% width = 95%></a>
 		<hr>
 		<h2>Lectures</h2>
-		<a href="/lecture"><button type = "button" class = "btn btn-link">Lecture 1</button></a>
-		<a href = "/lecture"><button type = "button" class = "btn btn-link">Lecture 2</button></a>
+		<a href="/lecture?classroom=CS135&key=1568559037634"=><button type = "button" class = "btn btn-link">Lecture 1</button></a>
+		<a href = "/lecture?classroom=CS135&key=1568559037634"><button type = "button" class = "btn btn-link">Lecture 2</button></a>
 	</div>
 	<div class = "top">
 		<p>Lecture 1</p>
@@ -41,6 +41,9 @@
 	<script src="{{ url_for('static', filename="scripts/lecture.js")}}"></script>
 	<script>
 		var scrollToSeek = true;
+
+		// let CLASSROOM = url.searchParams.get("classroom");
+		// let KEY = url.searchParams.get("key");
 
 		window.addEventListener("keydown", (e) => {
 			if(e.keyCode == 16) {
@@ -91,8 +94,7 @@
 				Spectrum.skipForward();
 			}
 		});
-
-		Spectrum.load("https://firebasestorage.googleapis.com/v0/b/htn-aydan.appspot.com/o/bee%20movie.wav?alt=media&token=f9e2404a-154a-4969-b5cc-32ec8bd8ae31");
+		Spectrum.load("https://firebasestorage.googleapis.com/v0/b/htn-aydan.appspot.com/o/"+CLASSROOM+"%2F"+KEY+".wav?alt=media&token=cccd4458-8c86-4720-9160-7123e09ef9d3");
 	</script>
 
 </body>

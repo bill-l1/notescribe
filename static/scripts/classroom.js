@@ -2,7 +2,16 @@ var socket = io.connect('http://127.0.0.1:5000/');
 
 socket.on('connect', function() {
     console.log("connected");
+    socket.on('disconnect', function(){
+      console.log('user disconnected');
+    });
+    socket.on('processing_done', function(data){
+        console.log("processing finished");
+        window.location.href = '/lecture?classroom='+data.classroom+"&key="+data.key;
+    });
 });
+
+
 
 const firebaseConfig = {
   apiKey: "AIzaSyAn2bI9-r1lQrRdao7QQ6GUXu2ZK-f9Hvc",
@@ -24,10 +33,16 @@ let uploadFile = function(){
   let storageRef = firebase.storage().ref();
   let wavRef = storageRef.child(classroom + "/" + key + ".wav")
 
+  let uploadBanner = document.getElementById('uploadbanner');
+  let loading = document.createElement("h1");
+  loading.innerHTML = "Loading..."
+  uploadBanner.appendChild(loading);
+
   console.log(element.files[0]);
   wavRef.put(element.files[0]).then(snapshot => {
     console.log('Uploaded.');
     socket.emit('createBlockData', {'key': key, 'classroom': classroom});
+    loading.innerHTML = "Processing..."
   });
   $("#submit").submit();
 

@@ -1,5 +1,5 @@
 import json, pyrebase, requests, urllib, os
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, make_response
 from celery import chain, signature
 from celery_config import celery_app
 from flask_socketio import SocketIO
@@ -84,18 +84,23 @@ socketio = SocketIO(flask_app)
 
 @flask_app.route('/')
 def page_index():
-    return render_template('index.html')
+    r = make_response(render_template('index.html'))
+    return r;
     # return '<html><body><h1>Hello World</h1></body></html>'
 
 @flask_app.route('/classroom')
 def page_classroom():
-    headers = request.headers
-    return render_template('classroom.html')
+    r = make_response(render_template('classroom.html'))
+    r.headers['Access-Control-Allow-Origin'] = 'http://localhost:5000'
+    print(r.headers);
+    return r
 
 @flask_app.route('/lecture')
 def page_lecture():
-    headers = request.headers
-    return render_template('lecture.html')
+    r = make_response(render_template('lecture.html'))
+    r.headers['Access-Control-Allow-Origin'] = 'http://localhost:5000'
+
+    return r
 
 @celery_app.task()
 def handleDownload(key, classroom, path):#TODO append to appropriate class later
@@ -115,6 +120,14 @@ def handleUpload(key, classroom, data, path):
 def handleDeleteFile(path):
     print("deleting", path)
     os.remove(path)
+    return
+
+@celery_app.task()
+def handleProcessDoneEmit(data):
+    global socketio
+    socketio.emit('processing_done', data)
+    print("emitting", data['key'])
+    return
 
 @socketio.on('createBlockData')
 def handleCreateBlockData(data):
@@ -129,6 +142,7 @@ def handleCreateBlockData(data):
     result = chain(handleDownload.s(key, classroom, path1), createBlockData.si(path1))()
     res = result.wait();
     chain(handleUpload.s(key, classroom, res, path2), handleDeleteFile.si(path1), handleDeleteFile.si(path2))()
+    handleProcessDoneEmit(data) # TODO async handleProcessEmit with the main thread
     print('super donezo')
 
 @socketio.on('generateKey')
