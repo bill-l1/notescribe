@@ -26,7 +26,7 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 
 let uploadFile = function(){
-  let element = document.getElementById('fileupload');
+  let uploadElement = document.getElementById('fileupload');
   let formData = new FormData();
   let key = new Date().getTime().toString();
   let classroom = "CS135"
@@ -35,15 +35,29 @@ let uploadFile = function(){
 
   let uploadBanner = document.getElementById('uploadbanner');
   let loading = document.createElement("h1");
-  loading.innerHTML = "Loading..."
   uploadBanner.appendChild(loading);
 
-  console.log(element.files[0]);
-  wavRef.put(element.files[0]).then(snapshot => {
-    console.log('Uploaded.');
-    socket.emit('createBlockData', {'key': key, 'classroom': classroom});
-    loading.innerHTML = "Processing..."
-  });
-  $("#submit").submit();
+  console.log(uploadElement.files[0]);
+  let file = uploadElement.files[0];
+
+  if(!file){
+    alert("No file specified!");
+    uploadElement.files.shift();
+  }else if(file.type != "audio/wav"){
+    alert("Audio must be a .wav file");
+    uploadElement.files.shift();
+  }else if(file.size >= 100000000){
+    alert("Audio file too large");
+    uploadElement.files.shift();
+  }else{
+    loading.innerHTML = "Loading..."
+    wavRef.put(uploadElement.files[0]).then(snapshot => {
+      console.log('Uploaded.');
+      socket.emit('createBlockData', {'key': key, 'classroom': classroom});
+      loading.innerHTML = "Processing..."
+    });
+    $("#submit").submit();
+  }
+
 
 }

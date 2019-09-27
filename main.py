@@ -124,10 +124,14 @@ def handleDeleteFile(path):
 
 @celery_app.task()
 def handleProcessDoneEmit(data):
+    processDoneEmit(data)
+    print("relaying emit task: ", data['key'])
+    return
+
+def processDoneEmit(data):
     global socketio
     socketio.emit('processing_done', data)
-    print("emitting", data['key'])
-    return
+    print("emitting: ", data['key'])
 
 @socketio.on('createBlockData')
 def handleCreateBlockData(data):
@@ -141,8 +145,13 @@ def handleCreateBlockData(data):
     #from blockGen import CreateBlockDataFromWav
     result = chain(handleDownload.s(key, classroom, path1), createBlockData.si(path1))()
     res = result.wait();
-    chain(handleUpload.s(key, classroom, res, path2), handleDeleteFile.si(path1), handleDeleteFile.si(path2))()
-    handleProcessDoneEmit(data) # TODO async handleProcessEmit with the main thread
+    result2 = chain(
+        handleUpload.s(key, classroom, res, path2),
+        handleDeleteFile.si(path1),
+        handleDeleteFile.si(path2)
+    )()
+    res2 = result2.wait();
+    handleProcessDoneEmit(data)
     print('super donezo')
 
 @socketio.on('generateKey')
