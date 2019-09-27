@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+	integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+	<link rel="stylesheet" href="style.css">
+	<title>Document</title>
+
+</head>
+
+<body>
+  <div class = "sidenav">
+		<img src="hackerman.png" alt="logo goes here" height = 10% width = 30%>
+		<h1>Classes</h1>
+		<a href="lecture1.html"><button type = "button" class = "btn btn-link">Lecture 1</button></a>
+		<a href = "lecture2.html"><button type = "button" class = "btn btn-link">Lecture 2</button></a>
+	</div>
+	<div class = "main">
+		<p>September 13, 2019</p>
+	</div>
+	<hr>
+
+	<div class = "main">
+		<form id="uploadbanner" enctype="multipart/form-data" method="post" action="#">
+			<input id="fileupload" name="myfile" type="file" />
+			<input type="button" value="Submit" id="submit" onclick="uploadFile()" />
+		</form>
+	</div>
+  <script src="https://www.gstatic.com/firebasejs/6.6.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/5.9.1/firebase-storage.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.js" integrity="sha256-yr4fRk/GU1ehYJPAs8P4JlTgu0Hdsp4ZKrx8bDEDC3I=" crossorigin="anonymous"></script>
+</body>
+</html>

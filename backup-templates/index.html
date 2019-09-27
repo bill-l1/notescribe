@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+	integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+	<link rel="stylesheet" href="{{ url_for('static', filename="style.css")}}">
+	<title>Document</title>
+</head>
+<body>
+	<div class = "top">
+		<h1>Class Selection</h1>
+	</div>
+	<hr>
+	<div class = "sidenav">
+		<a href="index.html"><img src="{{ url_for('static', filename="images/logosml.png")}}" alt="Logo" height = 10% width = 95%></a>
+		<hr>
+		<h2>Welcome, Bowen Zhu</h2>
+	</div>
+	<div class="container">
+		<div class="row">
+		  <div class="col-lg-3">
+			  <div onclick="location.href='/classroom';" style="cursor: pointer;">
+			  	<div class="zoom">
+				  	<h3>MATH 135</h3>
+						<p>Douglas Stebila</p>
+	  			</div>
+	  		</div>
+		  </div>
+
+		  <div class="col-lg-3">
+			  <div onclick="location.href='classroom.html';" style="cursor: pointer;">
+				  <div class="zoom">
+						<h3>MATH 137</h3>
+						<p>Jordan Hamilton</p>
+		  		</div>
+		  	</div>
+		  </div>
+
+		  <div class="col-lg-3">
+				<div onclick="location.href='classroom.html';" style="cursor: pointer;">
+				  <div class="zoom">
+				  	<h3>CS 135</h3>
+						<p>Charles Clarke</p>
+			  	</div>
+			  </div>
+		  </div>
+
+			<div class="col-lg-3">
+				<div class="zoom">
+				  <h3>ECON 101</h3>
+				  <p>Alain-Desire Nimubona</p>
+			  </div>
+		  </div>
+		</div>
+  </div>
+	<script src="https://www.gstatic.com/firebasejs/6.6.1/firebase-app.js"></script>
+	<script src="https://www.gstatic.com/firebasejs/5.9.1/firebase-storage.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+</body>
+</html>
