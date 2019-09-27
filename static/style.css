@@ -4,6 +4,7 @@ html, body{
 
 .sidebar{
 	background-color: #eee;
+	max-width:300px;
 }
 
 
@@ -14,4 +15,20 @@ html, body{
 .card-img-top{
 	max-height:8rem;
 	object-fit: cover;
+}
+
+.card-img-left{
+	max-width:5rem;
+	object-fit: cover;
+}
+
+.zoom {
+	transition: transform .2s;
+	margin: 0 auto;
+}
+
+.zoom:hover {
+	-ms-transform: scale(1.05); /* IE 9 */
+	-webkit-transform: scale(1.05); /* Safari 3-8 */
+	transform: scale(1.05);
 }

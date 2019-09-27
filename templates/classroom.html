@@ -1,37 +1,79 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<meta http-equiv="X-UA-Compatible" content="ie=edge">
-	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
-	integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-	<link rel="stylesheet" href="{{ url_for('static', filename="style.css")}}">
-	<title>Document</title>
-</head>
-<body>
-	<div class = "sidenav">
-		<a href=""><img src="{{ url_for('static', filename="images/logosml.png")}}"  alt="Logo" height = 10% width = 95%></a>
-		<h1>Lectures</h1>
-		<a href="/lecture?classroom=CS135&key=1568559037634"=><button type = "button" class = "btn btn-link">Lecture 1</button></a>
-		<a href = "/lecture?classroom=CS135&key=1568559037634"><button type = "button" class = "btn btn-link">Lecture 2</button></a>
-	</div>
-	<div class = "main">
-		<p>September 13, 2019</p>
-	</div>
-	<hr>
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-	<div class = "main">
-		<form id="uploadbanner" enctype="multipart/form-data" method="post" action="#">
-			<input id="fileupload" name="myfile" type="file" />
-			<input type="button" value="Submit" id="submit" onclick="uploadFile()" />
-		</form>
-	</div>
-	<script src="https://www.gstatic.com/firebasejs/6.6.1/firebase-app.js"></script>
-	<script src="https://www.gstatic.com/firebasejs/5.9.1/firebase-storage.js"></script>
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.js" integrity="sha256-yr4fRk/GU1ehYJPAs8P4JlTgu0Hdsp4ZKrx8bDEDC3I=" crossorigin="anonymous"></script>
-	<script src="{{ url_for('static', filename="scripts/classroom.js")}}"></script>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+		<link rel="stylesheet" href="{{ url_for('static', filename="style.css")}}">
+		<title>Notescribe</title>
+  </head>
+  <body>
+<div class="container mw-100 h-100">
+	<div class="row h-100">
+		<div class="sidebar col-md-3 p-3">
+			<a href="/"><img src="{{ url_for('static', filename="images/logosml.png")}}"  alt="Logo" height=auto width=95%></a>
+			<h3>Classes</h3>
+			<ul class="nav nav-pills flex-column nav-fill">
+				<li class="nav-item text-justify" >
+					<a class="nav-link active" data-toggle="pill" href="#">CS 135</a>
+				</li>
+			</ul>
+		</div>
+		<div class="col p-5 border">
+			<div class="container d-flex justify-content-between pl-4 p-3 header">
+				<h1 class="header-text">CS 135</h1>
+        <a href="#" class="btn btn-primary">Upload</a>
+			</div>
+      <div class="container">
+        <a href="#" class="text-decoration-none">
+          <div class="card d-flex flex-row my-3">
+            <img src="https://via.placeholder.com/300.png" class="card-img-left" alt="Logo">
+            <div class="card-body">
+              <h5 class="card-title">Lecture 1</h5>
+              <p class="card-text">something here</p>
+              <div class="d-flex flex-row justify-content-between">
+                <p class=""><small class="text-muted">Last updated 3 mins ago</small></p>
+                <p class=""><small class="text-muted">Added by Bowen Zhu</small></p>
+              </div>
+            </div>
+            <div class="align-self-center m-2">
+              <p class="">></p>
+            </div>
+          </div>
+        </a>
 
-</body>
+        <a href="#" class="text-decoration-none">
+          <div class="card d-flex flex-row my-3">
+            <img src="https://via.placeholder.com/300.png" class="card-img-left" alt="Logo">
+            <div class="card-body">
+              <h5 class="card-title">Lecture 1</h5>
+              <p class="card-text">something here</p>
+              <div class="d-flex flex-row justify-content-between">
+                <p class=""><small class="text-muted">Last updated 3 mins ago</small></p>
+                <p class=""><small class="text-muted">Added by Bowen Zhu</small></p>
+              </div>
+            </div>
+            <div class="align-self-center m-2">
+              <p class="">></p>
+            </div>
+          </div>
+        </a>
+      </div>
+		</div>
+	</div>
+</div>
+
+
+
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+		<script src="https://www.gstatic.com/firebasejs/6.6.1/firebase-app.js"></script>
+		<script src="https://www.gstatic.com/firebasejs/5.9.1/firebase-storage.js"></script>
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 </html>
