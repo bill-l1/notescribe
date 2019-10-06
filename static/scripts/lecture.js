@@ -51,23 +51,21 @@ function appendData(data) {
   for(var i = 0; i < data.blockArray.length; i++) {
     console.log(i)
     var div = document.createElement("div");
-    div.className = "word-block"
+    div.className = "my-4 mx-auto text-center word-block";
     div.id = i.toString();
     div.setAttribute("ondblclick", "startEdit("+i.toString()+")");
-
     div.innerHTML = data.blockArray[i].text;
     mainContainer.appendChild(div);
   }
 }
 
 function startEdit(id){
-
-  let block = document.getElementById(id)
+  let block = document.getElementById(id);
   if(block.getElementsByClassName("edit-container").length == 0){
     let editContainer = document.createElement("div");
     editContainer.id = "edit-container-"+id;
     editContainer.className = "edit-container";
-    block.appendChild(editContainer)
+    block.appendChild(editContainer);
 
     block.style.backgroundColor = "yellow";
     block.setAttribute("contenteditable", "true");

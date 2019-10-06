@@ -1,45 +1,59 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<meta http-equiv="X-UA-Compatible" content="ie=edge">
-	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
-	integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-	<link rel="stylesheet" href="/static/style.css">
-	<title>Document</title>
-</head>
-<body>
-	<div class = "sidenav">
-		<a href="/"><img src="{{ url_for('static', filename="images/logosml.png")}}" alt="Logo" height = 10% width = 95%></a>
-		<hr>
-		<h2>Lectures</h2>
-		<a href="/lecture?classroom=CS135&key=1568559037634"=><button type = "button" class = "btn btn-link">Lecture 1</button></a>
-		<a href = "/lecture?classroom=CS135&key=1568559037634"><button type = "button" class = "btn btn-link">Lecture 2</button></a>
-	</div>
-	<div class = "top">
-		<p>Lecture 1</p>
-	</div>
-	<hr>
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-	<div class = "main">
-		<div id = "waveform"></div>
-		<input type="button" id = "btn-play" value = "Play" disabled = "disabled"/>
-		<input type = "button" id = "btn-pause" value = "Pause" disabled = "disabled"/>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+		<link rel="stylesheet" href="{{ url_for('static', filename="style.css")}}">
+		<title>Notescribe</title>
+  </head>
+  <body>
 
+<div class="container mw-100 h-100 overflow-hidden">
+	<div class="row h-100">
+		<div class="sidebar col-md-3 p-3">
+			<a href="/"><img src="{{ url_for('static', filename="images/logosml.png")}}"  alt="Logo" height=auto width=95%></a>
+			<h3>Classes</h3>
+			<ul class="nav nav-pills flex-column nav-fill">
+				<li class="nav-item text-justify" >
+					<a class="nav-link" data-toggle="pill" href="#">CS 135</a>
+				</li>
+			</ul>
+		</div>
+		<div class="col pt-5 pb-5 pl-5 border d-flex flex-column h-100">
+			<div class = "d-flex flex-row h-25">
+				<div class="col p-3 flex-column align-self-center">
+					<button class="btn btn-primary btn-circle" id="playButton" disabled><i class="fa fa-play" id="playIcon"></i></button>
+				</div>
+				<div class="container align-self-center" id="waveform"></div>
+			</div>
+
+			<div class="container flex-grow-1 overflow-auto" >
+				<div class="fade-gradient w-100 position-absolute" style="padding-top:40%"></div>
+				<div style="height:40%"></div>
+				<div frameBorder="0" class="main" id="transcription-box"></div>
+			</div>
+		</div>
 	</div>
+</div>
 
-	<div class = "main" style="height:auto;">
-		<div frameBorder="0" class = "main" id="transcription-box"></div>
-	</div>
 
-	<script src="https://www.gstatic.com/firebasejs/6.6.1/firebase-app.js"></script>
-	<script src="https://www.gstatic.com/firebasejs/5.9.1/firebase-storage.js"></script>
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/wavesurfer.js/1.3.7/wavesurfer.min.js"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.js" integrity="sha256-yr4fRk/GU1ehYJPAs8P4JlTgu0Hdsp4ZKrx8bDEDC3I=" crossorigin="anonymous"></script>
-	<script src="{{ url_for('static', filename="scripts/lecture.js")}}"></script>
-	<script>
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+		<script src="https://www.gstatic.com/firebasejs/6.6.1/firebase-app.js"></script>
+		<script src="https://www.gstatic.com/firebasejs/5.9.1/firebase-storage.js"></script>
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.js" integrity="sha256-yr4fRk/GU1ehYJPAs8P4JlTgu0Hdsp4ZKrx8bDEDC3I=" crossorigin="anonymous"></script>
+
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/wavesurfer.js/1.3.7/wavesurfer.min.js"></script>
+		<script src="{{ url_for('static', filename="scripts/lecture.js")}}"></script>
+		<script>
 		var scrollToSeek = true;
 
 		// let CLASSROOM = url.searchParams.get("classroom");
@@ -52,38 +66,39 @@
 			}
 		});
 
-		var buttons = {
-			play: document.getElementById("btn-play"),
-			pause: document.getElementById("btn-pause"),
-		};
 		var Spectrum = WaveSurfer.create({
 			container: "#waveform",
 			progressColor: "03a9f4",
-			barHeight: 0.75,
+			barHeight: 1,
 			barWidth: 1,
-			height: 50,
 			scrollParent: false,
 			skipLength: 0.5,
+			normalize: true,
+			responsive: true
 		});
 
-		buttons.play.addEventListener("click", function(){
-			Spectrum.play();
-			buttons.play.disabled = true;
-			buttons.pause.disabled = false;
+		let playButton = document.getElementById("playButton");
+		let playIcon = document.getElementById("playIcon");
+		let playState = true;
+		playButton.addEventListener("click", function(){
+			if(playState){
+				Spectrum.play();
+			}else{
+				Spectrum.pause();
+			}
+			playState = !playState;
 		}, false);
 
-		buttons.pause.addEventListener("click", function() {
-			Spectrum.pause();
-			buttons.play.disabled = false;
-			buttons.pause.disabled = true;
-		}, false);
+		$('#playButton').click(function(){
+    		$(this).find('i').toggleClass('fa-play fa-pause')
+		});
 
 		Spectrum.on("ready", function(){
-			buttons.play.disabled = false;
+			playButton.disabled = false;
 		});
 
 		Spectrum.on('audioprocess', function () {
-    	currentTime = Spectrum.getCurrentTime();
+			currentTime = Spectrum.getCurrentTime();
 		});
 
 		window.addEventListener('wheel', function(event) {
@@ -95,7 +110,5 @@
 			}
 		});
 		Spectrum.load("https://firebasestorage.googleapis.com/v0/b/htn-aydan.appspot.com/o/"+CLASSROOM+"%2F"+KEY+".wav?alt=media&token=cccd4458-8c86-4720-9160-7123e09ef9d3");
-	</script>
-
-</body>
+		</script>
 </html>

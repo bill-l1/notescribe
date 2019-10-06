@@ -96,6 +96,13 @@ def page_classroom():
     print(r.headers);
     return r
 
+@flask_app.route('/lectureupload')
+def page_lecture_upload():
+    r = make_response(render_template('lectureupload.html'))
+    r.headers['Access-Control-Allow-Origin'] = 'http://localhost:5000'
+    print(r.headers);
+    return r
+
 @flask_app.route('/lecture')
 def page_lecture():
     r = make_response(render_template('lecture.html'))

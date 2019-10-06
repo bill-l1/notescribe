@@ -32,3 +32,28 @@ html, body{
 	-webkit-transform: scale(1.05); /* Safari 3-8 */
 	transform: scale(1.05);
 }
+
+.btn-circle {
+  width: 45px;
+  height: 45px;
+  line-height: 45px;
+  text-align: center;
+  padding: 0;
+  border-radius: 50%;
+}
+
+.fade-gradient{
+	background: rgb(255,255,255);
+	background: linear-gradient(0deg, rgba(255,255,255,0.75) 0%, rgba(255,255,255,0) 60%, rgba(255,255,255,0.5) 100%);
+	display: block;
+  position: absolute;
+  left: 0;
+  right: 0;
+	height: calc(100% - 13rem);
+	z-index: 10000;
+	pointer-events:none;
+}
+
+.word-block{
+	font-size:2vw;
+}

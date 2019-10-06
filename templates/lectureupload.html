@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+		<link rel="stylesheet" href="{{ url_for('static', filename="style.css")}}">
+		<title>Notescribe</title>
+  </head>
+  <body>
+<div class="container mw-100 h-100">
+	<div class="row h-100">
+		<div class="sidebar col-md-3 p-3">
+			<a href="/"><img src="{{ url_for('static', filename="images/logosml.png")}}"  alt="Logo" height=auto width=95%></a>
+			<h3>Classes</h3>
+			<ul class="nav nav-pills flex-column nav-fill">
+				<li class="nav-item text-justify" >
+					<a class="nav-link" data-toggle="pill" href="#">CS 135</a>
+				</li>
+			</ul>
+		</div>
+		<div class="col p-5 border">
+			<div class="container pl-4 p-3 header">
+				<h1 class="header-text">Upload new lecture</h1>
+			</div>
+				<form>
+					<div class="form-group">
+						<label for="lectureTitle">Title</label>
+						<input type="text" class="form-control" id="lectureTitle">
+					</div>
+					<div class="form-group">
+						<label for="lectureDesc">Description</label>
+						<input type="text" class="form-control" id="lectureDesc">
+					</div>
+					<div class="form-group">
+						<label for="lectureClass">Class</label>
+						<select class="form-control" id="lectureClass">
+							<option>CS 135</option>
+						</select>
+					</div>
+					<div class="form-group">
+						<label for="lectureFile">Upload audio</label>
+						<input type="file" class="form-control-file" id="lectureFile">
+						<small class="form-text text-muted">Only .wav files are supported. Files must be smaller than 50MB.</small>
+					</div>
+				</form>
+				<button class="btn btn-primary" onclick="uploadFile()">Upload</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+		<script src="https://www.gstatic.com/firebasejs/6.6.1/firebase-app.js"></script>
+		<script src="https://www.gstatic.com/firebasejs/5.9.1/firebase-storage.js"></script>
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.js" integrity="sha256-yr4fRk/GU1ehYJPAs8P4JlTgu0Hdsp4ZKrx8bDEDC3I=" crossorigin="anonymous"></script>
+		<script src="{{ url_for('static', filename="scripts/lectureupload.js")}}"></script>
+</html>
