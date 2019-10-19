@@ -16,6 +16,8 @@ firebase-debug.log*
 # it commented so all members can deploy to the same project(s) in .firebaserc.
 # .firebaserc
 
+firebase_api_key.py
+
 # Runtime data
 pids
 *.pid

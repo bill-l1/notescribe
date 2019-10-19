@@ -5,8 +5,7 @@ from celery_config import celery_app
 from flask_socketio import SocketIO
 from blockGen import createBlockData
 from convertAudio import fileToWav
-
-API_KEY = "bruh"
+from firebase_api_key import API_KEY
 
 config = {
   "apiKey": API_KEY,
