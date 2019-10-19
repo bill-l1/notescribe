@@ -6,8 +6,10 @@ from flask_socketio import SocketIO
 from blockGen import createBlockData
 from convertAudio import fileToWav
 
+API_KEY = "bruh"
+
 config = {
-  "apiKey": "AIzaSyAn2bI9-r1lQrRdao7QQ6GUXu2ZK-f9Hvc",
+  "apiKey": API_KEY,
   "authDomain": "htn-aydan.firebaseapp.com",
   "databaseURL": "https://htn-aydan.firebaseio.com",
   "storageBucket": "htn-aydan.appspot.com",
@@ -19,15 +21,6 @@ storage = firebase.storage()
 
 db = firebase.database()
 
-def signIn(classID):
-    if(classID == "password"):
-        headers = {
-        'Content-Type': 'application/json',
-        }
-        data = '{"returnSecureToken":true}'
-        response = requests.post('https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyAn2bI9-r1lQrRdao7QQ6GUXu2ZK-f9Hvc', data=data)
-        return True
-    return False
 
 def uploadNewBlock(blockFile):
     for i in range (1,len(blockFile["blockArray"])):
