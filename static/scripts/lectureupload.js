@@ -48,11 +48,28 @@ let uploadFile = function(){
     alert("Audio file too large");
     uploadElement.files.shift();
   }else{
-    // loading.innerHTML = "Loading..."
-    wavRef.put(uploadElement.files[0]).then(snapshot => {
+    uploadTask = wavRef.put(uploadElement.files[0])
+
+    uploadTask.on('state_changed', snapshot => {
+      //next
+      let progress = (snapshot.bytesTransferred / snapshot.totalBytes);
+      console.log('Upload progress:', progress);
+    }, error => {
+      //error
+      console.error('Upload error');
+    }, () => {
+      //SUCCESS
       console.log('Uploaded.');
-      socket.emit('createBlockData', {'key': key, 'classroom': classroom});
-      // loading.innerHTML = "Processing..."
+      uploadTask.snapshot.ref.getDownloadURL().then(downloadURL => {
+        uploadData = {
+          'key': key,
+          'classroom': classroom,
+          'downloadURL': downloadURL
+
+        }
+        socket.emit('createBlockData', uploadData);
+      })
+
     });
     $("#submit").submit();
   }

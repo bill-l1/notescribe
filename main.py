@@ -3,17 +3,16 @@ from flask import Flask, render_template, request, make_response
 from celery import chain, signature
 from celery_config import celery_app
 from flask_socketio import SocketIO
-from blockGen import CreateBlockDataFromWav, createBlockData
-
+from blockGen import createBlockData
+from convertAudio import fileToWav
 
 config = {
   "apiKey": "AIzaSyAn2bI9-r1lQrRdao7QQ6GUXu2ZK-f9Hvc",
   "authDomain": "htn-aydan.firebaseapp.com",
   "databaseURL": "https://htn-aydan.firebaseio.com",
-  "storageBucket": "htn-aydan.appspot.com"
-  }
-
-
+  "storageBucket": "htn-aydan.appspot.com",
+  "serviceAccount": "/Users/bill/htn-aydan.json"
+}
 
 firebase = pyrebase.initialize_app(config)
 storage = firebase.storage()
@@ -111,32 +110,22 @@ def page_lecture():
     return r
 
 @celery_app.task()
-def handleDownload(key, classroom, path):#TODO append to appropriate class later
-    return storage.child(classroom+"/"+key+".wav").download(path)
+def handleDownloadAudio(cloudPath, localPath):
+    print("Downloading " + cloudPath)
+    return storage.child(cloudPath).download(localPath)
 
 @celery_app.task()
-def handleUpload(key, classroom, data, path):
-    print("uploading shit:")
-    newData = data.copy();
-    newData['key'] = key
-    newData['classroom'] = classroom
-    with open(path, 'w') as outfile:
-        json.dump(newData, outfile)
-    return storage.child(classroom+"/"+key+".json").put(path)
+def handleUploadAudio(newCloudPath, localPath):
+    print("Uploading " + newCloudPath)
+    return storage.child(newCloudPath).put(localPath)
 
 @celery_app.task()
-def handleDeleteFile(path):
-    print("deleting", path)
-    os.remove(path)
-    return
+def handleDeleteTempAudio(localPath):
+    print("Deleting " + localPath)
+    return os.remove(localPath)
 
 @celery_app.task()
 def handleProcessDoneEmit(data):
-    processDoneEmit(data)
-    print("relaying emit task: ", data['key'])
-    return
-
-def processDoneEmit(data):
     global socketio
     socketio.emit('processing_done', data)
     print("emitting: ", data['key'])
@@ -146,19 +135,22 @@ def handleCreateBlockData(data):
     print(data)
     key = data['key']
     classroom = data['classroom']
+    downloadURL = data['downloadURL']
+
+    audioPath = '/' + classroom + '/' + key + ".wav"
+    tempPath = 'data/temp/' + key + '.wav'
+    storage_uri = 'gs://' + config['storageBucket'] + audioPath
+
     print("received key" , key, "for classroom", classroom)
-    print("finna look for wav:")
-    path1 = "data/temp/"+key+".wav"
-    path2 = "data/temp/"+key+".json"
-    #from blockGen import CreateBlockDataFromWav
-    result = chain(handleDownload.s(key, classroom, path1), createBlockData.si(path1))()
-    res = result.wait();
-    result2 = chain(
-        handleUpload.s(key, classroom, res, path2),
-        handleDeleteFile.si(path1),
-        handleDeleteFile.si(path2)
+    result = chain(
+        handleDownloadAudio.si(audioPath, tempPath),
+        fileToWav.si(tempPath, tempPath),
+        handleUploadAudio.si(audioPath, tempPath),
+        handleDeleteTempAudio.si(tempPath),
+        createBlockData.si(storage_uri, data)
     )()
-    res2 = result2.wait();
+    res = result.wait();
+    db.child("Classes").child(classroom).child("Transcripts").child(key).set(res);
     handleProcessDoneEmit(data)
     print('super donezo')
 
