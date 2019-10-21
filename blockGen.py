@@ -4,11 +4,20 @@ from google.oauth2 import service_account
 from google.protobuf.json_format import MessageToDict
 from celery import Celery, Task
 from celery_config import celery_app
+from copy import deepcopy
 
 credentials = service_account.Credentials.from_service_account_file(
     "/Users/bill/htn-aydan.json",
     scopes=["https://www.googleapis.com/auth/cloud-platform"],
 )
+
+PAUSE_THRESHOLD = 1
+WORD_COUNT_MINIMUM = 15
+EMPTY_BLOCK = {
+    'text': "",
+    'startTime': 0,
+    'endTime': 0
+}
 
 @celery_app.task()
 def createBlockData(storage_uri, data):
@@ -36,17 +45,39 @@ def createBlockData(storage_uri, data):
     operation = client.long_running_recognize(config, audio)
 
     print("Waiting for operation to complete...")
-    result = MessageToDict(operation.result().results[0].alternatives[0]);
-    print(result)
 
-    print("words:")
     key = data['key']
     classroom = data['classroom']
 
-    lectureData = []
-    for word in result['words']:
-        print(u"Word: {} - Start: {} - End {}".format
-            (word['word'], word['startTime'], word['endTime'])
-        )
+    print("Generating blocks...")
+    global PAUSE_THRESHOLD, WORD_COUNT_MINIMUM, EMPTY_BLOCK
+    lectureBlocks = []
 
-    return lectureData
+    for result in operation.result().results:
+        result = MessageToDict(result.alternatives[0]);
+        currentBlock = deepcopy(EMPTY_BLOCK)
+        currentBlock['startTime'] = float(result['words'][0]['startTime'][:-1])
+
+        for word in result['words']:
+            startTime = float(word['startTime'][:-1])
+            word['startTime'] = startTime
+            endTime = float(word['endTime'][:-1])
+            word['endTime'] = endTime
+            wordStr = word['word']
+            currentNumWords = 0
+
+            currentBlock['text'] += wordStr + " "
+            currentNumWords += 1
+
+            if (((startTime - startTime) > PAUSE_THRESHOLD) or ((wordStr[-1] in ['!', '?', '.']) and (currentNumWords > WORD_COUNT_MINIMUM))):
+                currentBlock['endTime'] =  endTime
+                lectureBlocks.append(deepcopy(currentBlock))
+                currentBlock = deepcopy(EMPTY_BLOCK)
+                currentBlock['startTime'] = endTime
+
+        currentBlock['endTime'] =  endTime
+        lectureBlocks.append(deepcopy(currentBlock))
+
+    print("Blocks created.")
+
+    return lectureBlocks

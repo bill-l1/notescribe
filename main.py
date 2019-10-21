@@ -57,20 +57,6 @@ flask_app.config.update(
     CELERY_RESULT_BACKEND='redis://localhost:6379',
     TEMPLATES_AUTO_RELOAD = True
 )
-#
-# celery_app = Celery(
-#     flask_app.import_name,
-#     broker=flask_app.config['CELERY_BROKER_URL'],
-#     backend=flask_app.config['CELERY_RESULT_BACKEND']
-# )
-# celery_app.conf.update(flask_app.config)
-#
-# class ContextTask(celery_app.Task):
-#     def __call__(self, *args, **kwargs):
-#         with flask_app.app_context():
-#             return self.run(*args, **kwargs)
-#
-# celery_app.Task = ContextTask
 
 socketio = SocketIO(flask_app)
 
@@ -142,7 +128,8 @@ def handleCreateBlockData(data):
         createBlockData.si(storage_uri, data)
     )()
     res = result.wait();
-    db.child("Classes").child(classroom).child("Transcripts").child(key).set(res);
+    print(res);
+    db.child("Transcripts").child(classroom).child(key).set(res);
     handleProcessDoneEmit(data)
     print('super donezo')
 

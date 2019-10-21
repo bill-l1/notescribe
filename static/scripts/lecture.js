@@ -9,7 +9,7 @@ let CLASSROOM = url.searchParams.get("classroom");
 let KEY = url.searchParams.get("key");
 
 const firebaseConfig = {
-  apiKey: "AIzaSyAn2bI9-r1lQrRdao7QQ6GUXu2ZK-f9Hvc",
+  apiKey: "-"",
   authDomain: "htn-aydan.firebaseapp.com",
   databaseURL: "https://htn-aydan.firebaseio.com",
   projectId: "htn-aydan",
@@ -31,30 +31,27 @@ NodeList.prototype.remove = HTMLCollection.prototype.remove = function() {
     }
 }
 
-let blockData = {};
+let lectureRef = firebase.database().ref("Transcripts/"+CLASSROOM+"/"+KEY);
+let blockData = [];
+let mainContainer = document.getElementById("transcription-box");
 
-fetch("https://firebasestorage.googleapis.com/v0/b/htn-aydan.appspot.com/o/"+CLASSROOM+"%2F"+KEY+".json?alt=media&token=6d1bc873-d336-412a-88c1-49ecdc8c9ef5")
-    .then(function (response) {
-      blockData = response.json();
-      return blockData
-    })
-    .then(function(data) {
-      appendData(data);
-    })
-    .catch(function(err) {
-      console.log("owo " + err);
-    });
+lectureRef.once('value').then(snapshot => {
+  let blockData = snapshot.val();
+  createBlockDiv(blockData);
+});
 
-function appendData(data) {
-  var mainContainer = document.getElementById("transcription-box");
-  blockData = data;
-  for(var i = 0; i < data.blockArray.length; i++) {
-    console.log(i)
-    var div = document.createElement("div");
+function createBlockDiv(blockArray){
+  for(i in blockArray){
+
+    let block = blockArray[i];
+    console.log(block.text);
+    blockData.push(block);
+
+    let div = document.createElement("div");
     div.className = "my-4 mx-auto text-center word-block";
     div.id = i.toString();
     div.setAttribute("ondblclick", "startEdit("+i.toString()+")");
-    div.innerHTML = data.blockArray[i].text;
+    div.innerHTML = block.text;
     mainContainer.appendChild(div);
   }
 }
@@ -98,19 +95,14 @@ $(document).keypress(
 function stopEdit(id, val=0){
   //0 - cancel, 1 - confirm
   document.getElementById("edit-container-"+id).remove();
-  let block = document.getElementById(id)
-  block.style.backgroundColor = "white";
-  block.setAttribute("contenteditable", "false");
-  block.blur();
-  if(blockData.blockArray[id].text != block.innerHTML && val == 1){
-    blockData.blockArray[id].text = block.innerHTML;
-    let storageRef = firebase.storage().ref();
-    let jsonRef = storageRef.child(blockData.classroom + "/" + blockData.key + ".json")
-    let json = new File([JSON.stringify(blockData)], blockData.key + ".json")
-    console.log(json)
-    jsonRef.put(json).then(snapshot => {
-      console.log('Uploaded', blockData.key+".json");
-    });
+  let blockElement = document.getElementById(id)
+  blockElement.style.backgroundColor = "white";
+  blockElement.setAttribute("contenteditable", "false");
+  blockElement.blur();
+
+  if(blockData[id].text != block.innerHTML && val == 1){
+    blockData[id].text = block.innerHTML;
+    lectureRef.set(blockData);
   }else{
      block.innerHTML = blockData.blockArray[id].text;
   }
