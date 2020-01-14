@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+	integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+	<link rel="stylesheet" href="/static/style.css">
+	<title>Document</title>
+</head>
+<body>
+	<div class = "sidenav">
+		<a href="/"><img src="{{ url_for('static', filename="images/logosml.png")}}" alt="Logo" height = 10% width = 95%></a>
+		<hr>
+		<h2>Lectures</h2>
+		<a href="/lecture?classroom=CS135&key=1568559037634"=><button type = "button" class = "btn btn-link">Lecture 1</button></a>
+		<a href = "/lecture?classroom=CS135&key=1568559037634"><button type = "button" class = "btn btn-link">Lecture 2</button></a>
+	</div>
+	<div class = "top">
+		<p>Lecture 1</p>
+	</div>
+	<hr>
+
+	<div class = "main">
+		<div id="waveform"></div>
+		<input type="button" id = "btn-play" value = "Play" disabled = "disabled"/>
+		<input type = "button" id = "btn-pause" value = "Pause" disabled = "disabled"/>
+
+	</div>
+
+	<div class = "main" style="height:auto;">
+		<div frameBorder="0" class = "main" id="transcription-box"></div>
+	</div>
+
+	<script src="https://www.gstatic.com/firebasejs/6.6.1/firebase-app.js"></script>
+	<script src="https://www.gstatic.com/firebasejs/5.9.1/firebase-storage.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/wavesurfer.js/1.3.7/wavesurfer.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.js" integrity="sha256-yr4fRk/GU1ehYJPAs8P4JlTgu0Hdsp4ZKrx8bDEDC3I=" crossorigin="anonymous"></script>
+	<script src="{{ url_for('static', filename="scripts/lecture.js")}}"></script>
+	<script>
+		var scrollToSeek = true;
+
+		// let CLASSROOM = url.searchParams.get("classroom");
+		// let KEY = url.searchParams.get("key");
+
+		window.addEventListener("keydown", (e) => {
+			if(e.keyCode == 16) {
+				console.log("Toggled");
+				scrollToSeek = !scrollToSeek;
+			}
+		});
+
+		var buttons = {
+			play: document.getElementById("btn-play"),
+			pause: document.getElementById("btn-pause"),
+		};
+		var Spectrum = WaveSurfer.create({
+			container: "#waveform",
+			progressColor: "03a9f4",
+			barHeight: 0.75,
+			barWidth: 1,
+			height: 50,
+			scrollParent: false,
+			skipLength: 0.5,
+		});
+
+		buttons.play.addEventListener("click", function(){
+			Spectrum.play();
+			buttons.play.disabled = true;
+			buttons.pause.disabled = false;
+		}, false);
+
+		buttons.pause.addEventListener("click", function() {
+			Spectrum.pause();
+			buttons.play.disabled = false;
+			buttons.pause.disabled = true;
+		}, false);
+
+		Spectrum.on("ready", function(){
+			buttons.play.disabled = false;
+		});
+
+		Spectrum.on('audioprocess', function () {
+    	currentTime = Spectrum.getCurrentTime();
+		});
+
+		window.addEventListener('wheel', function(event) {
+			if (event.deltaY < 0 && scrollToSeek) {
+				Spectrum.skipBackward();
+			}
+			else if (event.deltaY > 0 && scrollToSeek) {
+				Spectrum.skipForward();
+			}
+		});
+		Spectrum.load("https://firebasestorage.googleapis.com/v0/b/htn-aydan.appspot.com/o/"+CLASSROOM+"%2F"+KEY+".wav?alt=media&token=cccd4458-8c86-4720-9160-7123e09ef9d3");
+	</script>
+
+</body>
+</html>
