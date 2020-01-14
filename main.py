@@ -51,12 +51,15 @@ def upload_file(filename, classCode):
 
 
 flask_app = Flask(__name__)
-
 flask_app.config.update(
     CELERY_BROKER_URL='redis://localhost:6379',
     CELERY_RESULT_BACKEND='redis://localhost:6379',
     TEMPLATES_AUTO_RELOAD = True
 )
+flask_app.config['ENV'] = 'development'
+flask_app.config['DEBUG'] = True
+flask_app.config['TESTING'] = True
+
 
 socketio = SocketIO(flask_app)
 

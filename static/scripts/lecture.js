@@ -12,6 +12,8 @@ let scrollToSeek = false;
 let currentTime = 0;
 let blockPosition = 0;
 
+let editMode = false;
+
 const firebaseConfig = {
   apiKey: "-",
   authDomain: "htn-aydan.firebaseapp.com",
@@ -46,7 +48,7 @@ lectureRef.once('value').then(snapshot => {
   console.log(blockData);
 });
 
-function createBlockDiv(blockArray){
+let createBlockDiv = (blockArray) => {
   for(i in blockArray){
 
     let block = blockArray[i];
@@ -63,7 +65,7 @@ function createBlockDiv(blockArray){
     blockElements.push(div);
   }
 }
-
+/*
 function startEdit(id){
   let block = document.getElementById(id);
   if(block.getElementsByClassName("edit-container").length == 0){
@@ -93,13 +95,6 @@ function startEdit(id){
   }
 }
 
-$(document).keypress(
-  function(event){
-    if (event.which == '13') {
-      event.preventDefault();
-    }
-});
-
 function stopEdit(id, val=0){
   //0 - cancel, 1 - confirm
   document.getElementById("edit-container-"+id).remove();
@@ -116,9 +111,66 @@ function stopEdit(id, val=0){
   }
 }
 
+*/
+$(document).keypress(
+  function(event){
+    if (event.which == '13') {
+      event.preventDefault();
+    }
+    if (event.which == '69') {
+      toggleEdit();
+    }
+});
 
-function scrollToBlock(BlockNum, seek=false){
+let toggleEdit = () => {
+  if(!editMode){
+    startEdit();
+  }else{
+    stopEdit();
+  }
+  console.log("EDIT MODE: ", editMode);
+  editMode = !editMode
+}
+
+let startEdit = () => {
+  for(i in blockElements){
+    let block = document.getElementById(i)
+    block.style.backgroundColor = "yellow";
+    block.setAttribute("contenteditable", "true");
+    block.setAttribute("draggable", "true");
+  }
+}
+
+let stopEdit = (val=0) => {
+  //0 - cancel, 1 - confirm
+  for(i in blockElements){
+    let block = document.getElementById(i)
+    block.style.backgroundColor = "white";
+    block.draggable = "false"
+    block.setAttribute("contenteditable", "false");
+    block.setAttribute("draggable", "false");
+
+    if(blockData[i].text != block.innerHTML && val == 1){
+      blockData[i].text = block.innerHTML;
+      lectureRef.set(blockData);
+    }else{
+       block.innerHTML = blockData[i].text;
+    }
+  }
+}
+
+let createBlock = (blockPos = 0) => { // TODO THIS
+  let newBlockObj = {
+    endTime: 0,
+    startTime: 0,
+    text: "- new block -"
+  }
+  blockData.splice(blockPos, 0, newBlockObj);
+}
+
+let scrollToBlock = (BlockNum, seek=false) => {
   blockPosition = BlockNum;
+  console.log("new block position: ", blockPosition);
   let baseScrollLevel = blockElements[0].offsetTop;
   let blockElem = blockElements[BlockNum];
   let offset = blockElem.offsetTop - baseScrollLevel + blockElem.clientHeight/2;
@@ -129,20 +181,20 @@ function scrollToBlock(BlockNum, seek=false){
   }
 }
 
-function updateBlockAndTime(Time){
+let updateBlockAndTime = (Time) => {
   oldTime = Time;
   time = Spectrum.getCurrentTime();
   let currentBlockPos = blockPosition;
   if((time - oldTime) > 0){
     while(currentBlockPos < blockData.length-1 && blockData[currentBlockPos].endTime < time){
       currentBlockPos++;
+      scrollToBlock(currentBlockPos);
     }
-    scrollToBlock(currentBlockPos);
   }else if((time - oldTime) < 0){
     while(currentBlockPos > 0 && blockData[currentBlockPos].startTime > time ){
       currentBlockPos--;
+      scrollToBlock(currentBlockPos);
     }
-    scrollToBlock(currentBlockPos);
   }
 
   return time;
